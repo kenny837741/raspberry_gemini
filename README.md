@@ -1,2 +1,2 @@
-# raspberry_gemini
+# raspberry_gemini test for class
 test
