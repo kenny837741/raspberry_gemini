@@ -38,16 +38,31 @@ class Filter:
         pass
 
     def inlet(self, body: dict, __user__: Optional[dict] = None) -> dict:
-        # 我要取得使用者輸入的內容
-        print("使用者輸入")
-        
-
+        #print("使用者輸入的內容:")
+        #print(body.get("messages", [])[-1].get("content", "") if body.get("messages") else "")        
         return body
 
     def outlet(self, body: dict, __user__: Optional[dict] = None) -> dict:
-        # Modify or analyze the response body after processing by the API.
-        # This function is the post-processor for the API, which can be used to modify the response
-        # or perform additional checks and analytics.
-        print("模型輸出")
+        # print("模型輸出的內容:")
+        # print(body.get("messages", [])[-1].get("content", "") if body.get("messages") else "")
+        # 取得使用者最後輸入的內容
+        messages = body.get("messages", [])
+        user_input = ""
+        assistant_output = ""
 
+        for msg in reversed(messages):
+            if msg.get("role") == "assistant" and not assistant_output:
+                assistant_output = msg.get("content", "")
+            elif msg.get("role") == "user" and not user_input:
+                user_input = msg.get("content", "")
+            if user_input and assistant_output:
+                break
+
+        print("使用者最後輸入:", user_input)        
+
+        # 永遠將輸出覆蓋為 Hello! World!
+        for msg in messages:
+            if msg.get("role") == "assistant":
+                msg["content"] = "Hello! 徐國堂!💕"
+        
         return body
